@@ -1,2 +1,42 @@
-# overthinking-detector
-AI-powered web app that detects overthinking patterns using NLP and sentiment analysis
+# 🧠 Overthinking Detection Web App
+
+An AI-powered web application that analyzes text input to detect overthinking patterns using hybrid NLP techniques.
+
+## 🎯 Features
+- Real-time text analysis
+- 0-20 overthinking scoring system
+- Detects 10+ cognitive distortions:
+  - Mind reading
+  - Catastrophizing
+  - Rumination
+  - Social anxiety
+  - Self-blame
+  - Absolute language
+  - Future anxiety
+  - Repetitive thinking
+  - Avoidance behavior
+  - Question storm
+- Personalized coping advice
+- Interactive web interface
+
+## 🛠️ Tech Stack
+- **Backend:** Python, Flask
+- **NLP:** TextBlob
+- **Frontend:** HTML, CSS, JavaScript
+- **Pattern Detection:** Regex
+
+## 📊 Scoring System
+| Score | Level |
+|-------|-------|
+| 0-8 | 🟢 Normal/Healthy Thinking |
+| 9-12 | 🟡 Low Overthinking |
+| 13-16 | 🟠 Moderate Overthinking |
+| 17-19 | 🔴 Significant Overthinking |
+| 20 | 💀 High Overthinking |
+
+## 🚀 How to Run Locally
+
+1. Clone the repository:
+```bash
+git clone https://github.com/YOUR_USERNAME/overthinking-detector.git
+cd overthinking-detector
