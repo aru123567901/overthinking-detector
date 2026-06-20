@@ -11,11 +11,12 @@ def detect_overthinking(text):
     text_lower = text.lower()
     blob = TextBlob(text)
 
-    # Social anxiety keywords
+    # === SOCIAL ANXIETY ===
     social_keywords = [
         'everyone was looking', 'everyone looked', 'everyone is looking',
         'everybody looked', 'people were looking', 'they were looking',
-        'they stared', 'they saw me', 'they noticed me'
+        'they stared', 'they saw me', 'they noticed me',
+        'everyone hates', 'everyone thinks', 'everyone knows'
     ]
     for word in social_keywords:
         if word in text_lower:
@@ -23,11 +24,12 @@ def detect_overthinking(text):
             reasons.append(f"👥 Social anxiety: '{word}'")
             break
 
-    # Mind reading keywords
+    # === MIND READING ===
     mind_reading = [
         'they think', 'they must', 'they probably', 'they will think',
         'everyone thinks', 'people think', 'they judge', 'they are thinking',
-        'i know they', 'what will they think', 'what do they think'
+        'i know they', 'what will they think', 'what do they think',
+        'hates me', 'hate me'
     ]
     for word in mind_reading:
         if word in text_lower:
@@ -35,7 +37,7 @@ def detect_overthinking(text):
             reasons.append(f"🎭 Mind reading: '{word}'")
             break
 
-    # Self-blame keywords
+    # === SELF-BLAME ===
     self_blame = [
         'my fault', 'i messed up', 'i ruined', 'i failed',
         'i should have', 'i could have', 'i would have',
@@ -47,7 +49,19 @@ def detect_overthinking(text):
             reasons.append(f"😔 Self-blame: '{word}'")
             break
 
-    # Catastrophizing keywords
+    # === SEVERE CATASTROPHIZING ===
+    severe_patterns = [
+        'ruined everything', 'ruined it all', 'destroyed everything',
+        'life is over', 'everything is over', 'never get better',
+        'nothing will ever', 'nothing ever', 'will never get better'
+    ]
+    for word in severe_patterns:
+        if word in text_lower:
+            score += 7
+            reasons.append(f"💀 Severe catastrophizing: '{word}'")
+            break
+
+    # === REGULAR CATASTROPHIZING ===
     catastrophizing = [
         'what if i fail', 'what if i mess up', 'what if i ruin',
         'worst case', 'worst thing', 'terrible', 'awful',
@@ -59,7 +73,26 @@ def detect_overthinking(text):
             reasons.append(f"🔮 Catastrophizing: '{word}'")
             break
 
-    # Future anxiety
+    # === EXTREME ABSOLUTE LANGUAGE ===
+    extreme_absolutes = ['everything', 'nothing', 'never', 'always', 'everyone', 'nobody']
+    for word in extreme_absolutes:
+        if word in text_lower:
+            score += 3
+            reasons.append(f"⚫ Absolute thinking: '{word}'")
+            break
+
+    # === GLOBAL SELF-BLAME ===
+    global_blame = [
+        'i always mess up', 'i ruin everything', 'i destroy everything',
+        'i ruin it all', 'always mess up'
+    ]
+    for word in global_blame:
+        if word in text_lower:
+            score += 5
+            reasons.append(f"😔 Global self-blame: '{word}'")
+            break
+
+    # === FUTURE ANXIETY ===
     future_anxiety = [
         'tomorrow', 'next week', 'coming up', 'will happen',
         'what will', 'how will', 'what if they', 'what if i'
@@ -69,7 +102,7 @@ def detect_overthinking(text):
         score += 3
         reasons.append("🔮 Future anxiety detected")
 
-    # Repetitive thinking
+    # === REPETITIVE THINKING ===
     repetitive = ['keep thinking', 'can\'t stop thinking', 'replaying', 'going over',
                   'again and again', 'over and over', 'stuck in my head']
     for word in repetitive:
@@ -78,46 +111,36 @@ def detect_overthinking(text):
             reasons.append(f"🔄 Repetitive thinking: '{word}'")
             break
 
-    # Absolute language
-    absolutes = ['always', 'never', 'everything', 'nothing', 'everyone', 'nobody']
-    for word in absolutes:
-        if word in text_lower:
-            score += 3
-            reasons.append(f"⚫ Absolute thinking: '{word}'")
-            break
-
-    # Questions (racing thoughts)
+    # === QUESTIONS ===
     question_count = text.count('?')
-    if question_count >= 2:
+    if question_count >= 4:
+        score += 4
+        reasons.append(f"❓ Question storm ({question_count} questions in a row)")
+    elif question_count >= 2:
         score += 3
         reasons.append(f"❓ Racing thoughts ({question_count} questions)")
 
-    # Escalation patterns
+    # === ESCALATION PATTERNS ===
     if re.search(r'(if|when) .* (then|that will) .* (over|awkward|ruined)', text_lower):
         score += 4
         reasons.append("📈 Catastrophic escalation detected")
 
-    # Avoidance behavior
+    # === AVOIDANCE BEHAVIOR ===
     if re.search(r'(maybe|perhaps) .* (stop|quit|give up|avoid)', text_lower):
         score += 3
         reasons.append("🚫 Avoidance behavior detected")
 
-    # Question storm (4+ questions)
-    if question_count >= 4:
-        score += 4
-        reasons.append(f"❓ Question storm ({question_count} questions in a row)")
-
-    # Thought loop
+    # === THOUGHT LOOP ===
     if re.search(r'(can\'t stop thinking|keep thinking|can\'t get it out of my head)', text_lower):
         score += 3
         reasons.append("🌀 Thought loop detected")
 
-    # Rumination over time
+    # === RUMINATION OVER TIME ===
     if re.search(r'(hours|days|weeks|keeps|still)', text_lower):
         score += 2
         reasons.append("⌛ Extended rumination over time")
 
-    # TEXTBLOB SENTIMENT
+    # === TEXTBLOB SENTIMENT ===
     polarity = blob.sentiment.polarity
     subjectivity = blob.sentiment.subjectivity
 
@@ -135,26 +158,26 @@ def detect_overthinking(text):
         score += 3
         reasons.append("🎭 Highly emotional/subjective thinking")
 
-    # Self-focus
+    # === SELF-FOCUS ===
     self_count = text_lower.count(' i ') + text_lower.count(' me ') + text_lower.count(' my ') + text_lower.count(" i'm ")
     if self_count >= 4:
         score += 3
         reasons.append(f"🎯 High self-focus ({self_count} references)")
 
-    # Uncertainty
+    # === UNCERTAINTY ===
     uncertainty = ['maybe', 'perhaps', 'probably', 'i think', 'i guess', 'not sure']
     uncertainty_count = sum(1 for w in uncertainty if w in text_lower)
     if uncertainty_count >= 2:
         score += 3
         reasons.append(f"🤔 High uncertainty ({uncertainty_count} indicators)")
 
-    # Length (rumination)
+    # === LENGTH ===
     word_count = len(text.split())
     if word_count > 100:
         score += 3
         reasons.append(f"📝 Extended rumination ({word_count} words)")
 
-    # CALM THINKING (REDUCES SCORE)
+    # === CALM THINKING (REDUCES SCORE) ===
     calm_phrases = [
         "it's fine", "it's okay", "i can handle", "no problem",
         "not a big deal", "that's normal", "it happens",
@@ -230,4 +253,4 @@ if __name__ == '__main__':
     print("=" * 55)
     print(f"Server running on port: {port}")
     print("=" * 55)
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=False)
