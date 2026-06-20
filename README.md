@@ -40,3 +40,18 @@ An AI-powered web application that analyzes text input to detect overthinking pa
 ```bash
 git clone https://github.com/YOUR_USERNAME/overthinking-detector.git
 cd overthinking-detector
+
+2. Install dependencies:
+
+pip install flask textblob
+python -m textblob.download_corpora
+
+3.Run the app:
+
+python app.py
+
+4.Open browser to http://127.0.0.1:5000
+
+📝 Example Input
+"Everyone was looking at me when I walked in late. I know they were judging me. They probably think I'm so unprofessional."
+
