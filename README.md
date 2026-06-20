@@ -59,3 +59,10 @@ overthinking-detector/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+
+Author 
+Aruhi Patel
+
+License
+MIT
+
