@@ -58,16 +58,6 @@ Example Input:
 
 "Everyone was looking at me when I walked in late. I know they were judging me. They probably think I'm so unprofessional."
 
-Project Structure:
-
-overthinking-detector/
-├── app.py
-├── templates/
-│ └── index.html
-├── requirements.txt
-├── .gitignore
-└── README.md
-
 Author 
 Aruhi Patel
 
