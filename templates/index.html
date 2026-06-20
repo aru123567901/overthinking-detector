@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Overthinking Detector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .badge {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .badge span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 18px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .examples {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .examples p {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .example-btn {
+            background: white;
+            color: #667eea;
+            border: 1px solid #667eea;
+            padding: 8px 16px;
+            font-size: 13px;
+            width: auto;
+            margin-top: 0;
+        }
+        
+        .example-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 20px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .score-circle {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .score-number {
+            font-size: 64px;
+            font-weight: bold;
+            display: inline-block;
+            padding: 20px 40px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .level {
+            font-size: 28px;
+            text-align: center;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .advice {
+            text-align: center;
+            padding: 18px;
+            background: #f0f0f0;
+            border-radius: 16px;
+            margin: 20px 0;
+            font-size: 16px;
+        }
+        
+        .reasons {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .reasons li {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            font-size: 14px;
+        }
+        
+        .breakdown {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Hybrid Overthinking Detector</h1>
+        <div class="badge"><span>AI-Powered • Context-Aware • Hybrid Detection</span></div>
+        <div class="subtitle">
+            I understand the <strong>meaning behind your words</strong>, not just keywords.<br>
+            Type what's on your mind and I'll analyze it.
+        </div>
+        
+        <textarea id="thoughts" placeholder="Example: I was too loud when I cheered and everyone looked at me awkwardly. What will they think of me? I always mess everything up..."></textarea>
+        
+        <button onclick="analyze()">🔍 Analyze My Thoughts</button>
+        
+        <div class="examples">
+            <p>📝 Try these examples:</p>
+            <div class="example-buttons">
+                <button class="example-btn" onclick="useExample('social')">Social Anxiety</button>
+                <button class="example-btn" onclick="useExample('future')">Future Worry</button>
+                <button class="example-btn" onclick="useExample('past')">Past Rumination</button>
+                <button class="example-btn" onclick="useExample('calm')">Calm Thinking</button>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your thoughts...</p>
+        </div>
+        
+        <div class="result" id="result">
+            <div class="score-circle">
+                <div class="score-number" id="score">0/20</div>
+            </div>
+            <div class="level" id="level"></div>
+            <div class="advice" id="advice"></div>
+            
+            <h3>🔍 Why I think this:</h3>
+            <ul class="reasons" id="reasons"></ul>
+            
+            <div class="breakdown" id="breakdown"></div>
+        </div>
+        
+        <div class="footer">
+            💡 This tool uses hybrid detection: sentiment analysis + context-aware pattern matching + calm thinking detection.
+        </div>
+    </div>
+    
+    <script>
+        async function analyze() {
+            const text = document.getElementById('thoughts').value;
+            
+            if (!text.trim()) {
+                alert('💭 Please type your thoughts first!');
+                return;
+            }
+            
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('result').classList.remove('show');
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ text: text })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                document.getElementById('score').innerHTML = `${data.score}/20`;
+                document.getElementById('score').style.background = `linear-gradient(135deg, ${data.color}, ${data.color}cc)`;
+                document.getElementById('level').innerHTML = data.level;
+                document.getElementById('level').style.color = data.color;
+                document.getElementById('advice').innerHTML = `💡 ${data.advice}`;
+                
+                const reasonsList = document.getElementById('reasons');
+                reasonsList.innerHTML = '';
+                if (data.reasons.length === 0) {
+                    reasonsList.innerHTML = '<li>✅ No significant overthinking patterns detected. Your thinking seems balanced!</li>';
+                } else {
+                    data.reasons.forEach(reason => {
+                        const li = document.createElement('li');
+                        li.innerHTML = reason;
+                        reasonsList.appendChild(li);
+                    });
+                }
+                
+                if (data.breakdown) {
+                    document.getElementById('breakdown').innerHTML = `📊 Breakdown: Sentiment ${data.breakdown.sentiment} + Patterns ${data.breakdown.pattern} - Calm ${data.breakdown.calm_reduction} = ${data.score}/20`;
+                }
+                
+                document.getElementById('result').classList.add('show');
+                
+            } catch (error) {
+                alert('⚠️ Error analyzing. Please try again.');
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+        
+        function useExample(type) {
+            const examples = {
+                social: "I was too loud and everyone looked at me awkwardly. What will they think of me? Will they still want to be friends?",
+                future: "What if I fail the interview? What if they ask something I don't know? I'm going to embarrass myself.",
+                past: "I shouldn't have said that in the meeting. Why did I open my mouth? I keep thinking about it.",
+                calm: "I made a small mistake but it's okay. Everyone makes mistakes. I'll learn from this and do better next time."
+            };
+            document.getElementById('thoughts').value = examples[type];
+            analyze();
+        }
+        
+        document.getElementById('thoughts').addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                analyze();
+            }
+        });
+    </script>
+</body>
+</html>
