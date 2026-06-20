@@ -41,17 +41,13 @@ An AI-powered web application that analyzes text input to detect overthinking pa
 cd overthinking-detector
 
 2.install dependencies:
-
 pip install flask textblob
-
 python -m textblob.download_corpora
 
 3.Run the app:
-
 python app.py
 
 4.Open your browser:
-
 Go to http://127.0.0.1:5000
 
 Example Input:
